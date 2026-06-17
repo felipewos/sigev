@@ -1,0 +1,68 @@
+\section{Memorial técnico para registro de software}
+
+\subsection{Identificação}
+
+\begin{longtable}{>{\bfseries}p{0.32\textwidth}p{0.60\textwidth}}
+Nome do programa & SIGEV -- Sistema Inteligente de Gestão da Evasão \\
+Categoria & Aplicativo desktop de apoio à decisão multicritério aplicado à gestão da evasão escolar \\
+Versão sugerida para registro & 1.0.0 \\
+Linguagens e tecnologias & C\#, XAML, WinUI 3, .NET, scripts Google Apps Script gerados pelo aplicativo \\
+Ambiente de execução & Windows x64 \\
+Autor(es) & [preencher] \\
+Titular(es) & [preencher; verificar eventual titularidade institucional] \\
+Orientador/coorientador & [preencher, se aplicável] \\
+Data de fechamento da versão & [preencher] \\
+\end{longtable}
+
+\subsection{Finalidade do programa}
+
+O SIGEV é um sistema de apoio à decisão para gestores escolares e acadêmicos que precisam identificar, validar e priorizar causas de evasão estudantil. O aplicativo organiza projetos por instituição e curso, gera questionários para coleta de dados, importa respostas do Google Forms, aprova causas por critérios estatísticos simples e produz ranking final de prioridades.
+
+\subsection{Módulos funcionais}
+
+\begin{enumerate}
+  \item \textbf{Gestão de projetos}: criação, edição, abertura e exclusão de projetos por instituição e curso.
+  \item \textbf{Participantes}: cadastro dos grupos que participarão da coleta e da ponderação.
+  \item \textbf{Causas possíveis}: cadastro, importação e exportação de modelo de causas de evasão.
+  \item \textbf{Geração de formulários}: exportação de scripts Google Apps Script que criam questionários no Google Forms.
+  \item \textbf{Aprovação das causas}: importação de respostas, cálculo de mediana, cálculo de concordância e aprovação/reprovação das causas.
+  \item \textbf{Peso dos grupos}: cálculo de pesos por comparações pareadas entre grupos participantes e verificação de consistência.
+  \item \textbf{Ranking final}: importação de respostas finais e priorização das causas aprovadas.
+  \item \textbf{Relatório}: exportação de CSV com resumo, critérios usados, pesos e ranking.
+\end{enumerate}
+
+\subsection{Originalidade funcional}
+
+O programa integra, em um fluxo único, a geração de instrumentos de coleta, a importação de respostas, a filtragem por mediana e concordância, a ponderação dos grupos participantes e a priorização multicritério final. Essa integração reduz a necessidade de planilhas manuais e traduz os métodos de apoio à decisão para uma interface operacional voltada a gestores.
+
+\subsection{Arquivos representativos para guarda sigilosa}
+
+Para fins de registro de software, recomenda-se arquivar e gerar \textit{hash} de um pacote contendo:
+
+\begin{itemize}
+  \item código-fonte em \texttt{PrimeiraTelaWinUI/}, \texttt{Views/}, \texttt{WinRT/} e \texttt{Properties/};
+  \item projeto \texttt{PrimeiraTelaWinUI.csproj};
+  \item scripts de build e instalador;
+  \item documentação \texttt{README.md}, \texttt{NOTES.md} e \texttt{docs/};
+  \item exemplos em \texttt{Samples/};
+  \item instalador gerado \texttt{dist/SIGEV-Setup-x64.exe}, se a versão fechada já estiver construída.
+\end{itemize}
+
+\subsection{Comando sugerido para gerar pacote e hash}
+
+Executar na raiz do projeto após fechar a versão:
+
+\begin{verbatim}
+$versao = "1.0.0"
+$zip = "SIGEV-fonte-$versao.zip"
+Compress-Archive -Path PrimeiraTelaWinUI,Views,WinRT,Properties,AppAssets,Samples,docs,
+  installer,PrimeiraTelaWinUI.csproj,build-installer.ps1,README.md,NOTES.md `
+  -DestinationPath $zip -Force
+Get-FileHash -LiteralPath $zip -Algorithm SHA256
+\end{verbatim}
+
+Guardar o arquivo compactado em local seguro. Informar o \textit{hash} no e-Software conforme o formulário do INPI.
+
+\subsection{Declaração técnica de escopo}
+
+O registro de programa de computador protege a expressão do software e sua documentação associada, não a ideia abstrata de gestão da evasão. A estratégia de proteção por patente deve ser avaliada separadamente, conforme a minuta das seções seguintes.

@@ -8,6 +8,10 @@ dist/*.zip
 dist/SIGEV-Instalador.exe
 dist/installer-src/
 dist/installer-out/
+_pdf_text/
+documentos_inpi/*.aux
+documentos_inpi/*.out
+documentos_inpi/*.toc
 
 *.user
 *.suo

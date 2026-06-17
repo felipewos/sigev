@@ -11,7 +11,7 @@
     <Page.Resources>
         <Style x:Key="CardBorderStyle" TargetType="Border">
             <Setter Property="Padding" Value="20" />
-            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="CornerRadius" Value="8" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
             <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
@@ -59,7 +59,7 @@
                 <Border Style="{StaticResource CardBorderStyle}">
                     <StackPanel Spacing="12">
                         <TextBlock FontSize="24" FontWeight="SemiBold" Text="Relatório e ranking final" />
-                        <TextBlock x:Name="ReportsTextBlock" Text="Últimas importações: validação (q1.csv: -) | final (q2.csv: -) | causas (causas.csv: -)." TextWrapping="WrapWholeWords" />
+                        <TextBlock x:Name="ReportsTextBlock" Text="Últimas importações: aprovação (-) | ranking final (-) | causas (-)." TextWrapping="WrapWholeWords" />
                         <Grid ColumnSpacing="12">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -70,12 +70,12 @@
                             <TextBlock x:Name="ReportsTopCauseValueTextBlock" Grid.Column="0" Text="-" TextWrapping="WrapWholeWords" />
                             <TextBlock x:Name="ReportsCrGlobalValueTextBlock" Grid.Column="1" Text="-" TextWrapping="WrapWholeWords" />
                             <TextBlock x:Name="ReportsApprovedCausesValueTextBlock" Grid.Column="2" Text="-" TextWrapping="WrapWholeWords" />
-                            <TextBlock x:Name="ReportsRespondentsValueTextBlock" Grid.Column="3" Text="Validação: 0 | Final: 0" TextWrapping="WrapWholeWords" />
+                            <TextBlock x:Name="ReportsRespondentsValueTextBlock" Grid.Column="3" Text="Aprovação: 0 | Final: 0" TextWrapping="WrapWholeWords" />
                         </Grid>
                         <StackPanel Orientation="Horizontal" Spacing="12">
                             <Button Click="OnRefreshReportsClicked" Content="Atualizar relatório" />
-                            <Button Click="OnExportReportsCsvClicked" Content="Exportar relatório" />
-                            <Button Click="OnCopyReportsSummaryClicked" Content="Copiar resumo" />
+                            <Button Click="OnExportReportsCsvClicked" Content="Exportar relatório em CSV" />
+                            <Button Click="OnCopyReportsSummaryClicked" Content="Copiar resumo do relatório" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Spacing="12">
                             <Button Click="OnImportQ2CsvClicked" Content="Importar respostas finais" />
@@ -152,10 +152,10 @@
                 <Border Style="{StaticResource CardBorderStyle}">
                     <StackPanel Spacing="12">
                         <TextBlock FontSize="24" FontWeight="SemiBold" Text="Aprovação das causas" />
-                        <TextBlock x:Name="TeamAssignmentsTextBlock" Text="Importe as respostas de validação para aprovar as causas." TextWrapping="WrapWholeWords" />
+                        <TextBlock x:Name="TeamAssignmentsTextBlock" Text="Importe as respostas da etapa de aprovação para aprovar as causas." TextWrapping="WrapWholeWords" />
                         <StackPanel Orientation="Horizontal" Spacing="12">
-                            <Button Click="OnImportQ1CsvClicked" Content="Importar respostas de validação" />
-                            <Button Click="OnClearQ1TableClicked" Content="Limpar validação" />
+                            <Button Click="OnImportQ1CsvClicked" Content="Importar respostas de aprovação" />
+                            <Button Click="OnClearQ1TableClicked" Content="Limpar aprovação" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Spacing="12">
                             <CheckBox x:Name="Scale5CheckBox" Checked="OnScaleSelectionChanged" Content="5" IsChecked="True" Unchecked="OnScaleSelectionChanged" />
@@ -208,7 +208,7 @@
                         <StackPanel Orientation="Horizontal" Spacing="12">
                             <Button Click="OnExportQ1TxtClicked" Content="Gerar questionário de validação" />
                             <Button Click="OnImportCausesCsvClicked" Content="Importar lista de causas" />
-                            <Button Click="OnDownloadCausesTemplateClicked" Content="Baixar modelo" />
+                            <Button Click="OnDownloadCausesTemplateClicked" Content="Baixar modelo de causas" />
                             <Button Click="OnClearCausesClicked" Content="Limpar causas possíveis" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Spacing="12">

@@ -1,0 +1,59 @@
+\section{Orientações para entrada no INPI}
+
+\subsection{Leitura da Resolução 01/2003 de 2023}
+
+A pasta \texttt{documentos/} contém a versão \texttt{Resolucao\_01\_2003\_Producao\_Cientifica 2023.pdf}. A leitura dessa resolução indica:
+
+\begin{itemize}
+  \item para agendamento da defesa, exige-se comprovação de submissão de ao menos um artigo científico completo relacionado à dissertação, em conjunto com o orientador;
+  \item para obtenção do grau de mestre, uma das alternativas aceitas é realizar um depósito de patente relacionado ao tema da dissertação;
+  \item o anexo da resolução lista \textit{Software/Aplicativo} como produto técnico/tecnológico, mas o texto de 2023 não apresenta o registro de software como substituto isolado do depósito de patente;
+  \item existe outro arquivo na pasta, \texttt{Resolução sobre Produção Cientifica Obrigatória.pdf}, com redação revisada em 2025. Antes do protocolo, confirmar com a coordenação qual redação está vigente para fins acadêmicos.
+\end{itemize}
+
+\subsection{Escolha estratégica recomendada}
+
+Para o SIGEV, há dois caminhos distintos:
+
+\begin{enumerate}
+  \item \textbf{Registro de programa de computador}: caminho natural para proteger o código-fonte, interface e conjunto de instruções do aplicativo. O INPI informa que programas de computador podem ser registrados online e que o registro oferece maior segurança jurídica para comprovar autoria e titularidade. Fonte oficial: \url{https://www.gov.br/inpi/pt-br/servicos/programas-de-computador/guia-basico}.
+  \item \textbf{Depósito de patente}: caminho possível apenas se a solução for apresentada como invenção ou processo técnico patenteável, com novidade, atividade inventiva e aplicação industrial. O depósito não significa concessão; o pedido será examinado pelo INPI. Fonte oficial: \url{https://www.gov.br/inpi/pt-br/servicos/patentes/tutorial-de-deposito}.
+\end{enumerate}
+
+\textbf{Recomendação prática}: registrar o software no e-Software e, em paralelo, submeter a minuta de patente deste pacote ao NIT/procurador para avaliar se há matéria patenteável. Se o objetivo acadêmico for cumprir literalmente o item de \textit{depósito de patente} da Resolução 01/2003 de 2023, confirmar com a coordenação se o protocolo de patente é indispensável ou se o registro de software/produto técnico será aceito em combinação com as demais produções.
+
+\subsection{Roteiro para registro de software no e-Software}
+
+\begin{enumerate}
+  \item Fechar a versão do SIGEV que será registrada.
+  \item Separar o pacote técnico: código-fonte, documentação, telas principais, arquivo de build e instalador.
+  \item Gerar um arquivo compactado do material sigiloso que represente a versão registrada.
+  \item Gerar o resumo digital \textit{hash} desse arquivo. O guia do INPI orienta realizar a criptografia do texto ou arquivo que contenha o código-fonte e inserir o resumo \textit{hash} no formulário eletrônico.
+  \item Providenciar certificado digital qualificado ICP-Brasil. O guia do INPI alerta que assinaturas avançadas como Gov.br não são aceitas no e-Software.
+  \item Cadastrar-se no e-INPI, emitir e pagar a GRU de programa de computador, código 730, conforme guia do INPI.
+  \item Assinar digitalmente a Declaração de Veracidade e procuração, se houver.
+  \item Acessar o sistema e-Software, preencher o formulário, informar o \textit{hash} e anexar a Declaração de Veracidade assinada.
+  \item Acompanhar a publicação na Revista da Propriedade Industrial. O guia básico do INPI informa prazo de até 10 dias após confirmação de pagamento para publicação do registro.
+\end{enumerate}
+
+\subsection{Roteiro para depósito de patente}
+
+\begin{enumerate}
+  \item Fazer busca de anterioridade em bases de patentes e publicações científicas.
+  \item Validar, com NIT/procurador, se a matéria é patenteável ou se se trata de software/método de gestão sem efeito técnico suficiente.
+  \item Definir titulares, inventores, cotitularidade com instituição, orientador e regras de exploração.
+  \item Revisar e completar os documentos deste pacote: relatório descritivo, reivindicações e resumo.
+  \item Preparar desenhos ou fluxogramas técnicos se o NIT/procurador entender necessário.
+  \item Cadastrar-se no e-INPI, emitir e pagar a GRU de patente, usando o código 200 quando aplicável ao pedido de patente de invenção ou modelo de utilidade, e protocolar no e-Patentes.
+  \item Acompanhar exigências, publicação, pedido de exame e anuidades. O tutorial oficial do INPI informa que o pedido passa por exame de mérito e que a patente só existe após deferimento e emissão da carta-patente.
+\end{enumerate}
+
+\subsection{Fontes oficiais consultadas}
+
+\begin{itemize}
+  \item INPI, Guia Básico de Programas de Computador: \url{https://www.gov.br/inpi/pt-br/servicos/programas-de-computador/guia-basico}
+  \item INPI, Programa de Computador -- Mais informações: \url{https://www.gov.br/inpi/pt-br/servicos/programas-de-computador/guia-completo-de-programa-de-computador}
+  \item INPI, Sistema e-Software: \url{https://www.gov.br/inpi/pt-br/servicos/programas-de-computador/e-software}
+  \item INPI, Guia Básico de Patentes: \url{https://www.gov.br/inpi/pt-br/servicos/patentes/guia-basico}
+  \item INPI, Tutorial de Depósito de Pedidos de Patente: \url{https://www.gov.br/inpi/pt-br/servicos/patentes/tutorial-de-deposito}
+\end{itemize}

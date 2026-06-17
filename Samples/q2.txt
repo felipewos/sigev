@@ -1,6 +1,6 @@
 function criarFormulario() {
-  var form = FormApp.create('QUESTIONÁRIO FINAL - AVALIAÇÃO DA INTENSIDADE DAS CAUSAS');
-  form.setDescription('Prezado(a) participante,\n\nEste questionário integra a etapa final da pesquisa de mestrado sobre a evasão no curso de Licenciatura em Física. O objetivo é mensurar a intensidade com que diferentes fatores influenciam a decisão de evasão em nosso curso. Sua resposta é anônima e fundamental para a elaboração de um plano de ações. O tempo estimado de preenchimento é de 5 minutos.');
+  var form = FormApp.create('QUESTIONÁRIO FINAL - RANKING DAS CAUSAS DE EVASÃO');
+  form.setDescription('Prezado(a) participante,\n\nEste questionário ajuda a medir a intensidade das causas aprovadas na etapa anterior. Sua resposta é anônima e será usada para montar o ranking final de prioridades da escola ou curso. O tempo estimado de preenchimento é de 5 minutos.');
   var termoConsentimento = form.addMultipleChoiceItem();
   termoConsentimento.setTitle('TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO (TCLE)');
   termoConsentimento.setHelpText('Declaro que li e compreendi as informações desta pesquisa. Minha participação é voluntária, posso interromper a qualquer momento e autorizo o uso das respostas para fins acadêmicos, de forma anônima.');

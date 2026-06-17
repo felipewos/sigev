@@ -1737,6 +1737,12 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 
 	private int q2ResponseCount;
 
+	private const string CausesCsvFileName = "causas.csv";
+
+	private const string ValidationCsvFileName = "q1.csv";
+
+	private const string FinalAnswersCsvFileName = "q2.csv";
+
 	[GeneratedCode("Microsoft.UI.Xaml.Markup.Compiler", " 3.0.0.2602")]
 	private Grid PageRootGrid;
 
@@ -2190,7 +2196,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		}
 		int approvedCauses = q1Rows.Count((Q1TableRow q1TableRow) => string.Equals(q1TableRow.Status, "Aprovada", StringComparison.OrdinalIgnoreCase));
 		int totalCauses = q1Rows.Count;
-		ReportsRespondentsValueTextBlock.Text = $"Validação: {q1ResponseCount} | Final: {q2ResponseCount}";
+		ReportsRespondentsValueTextBlock.Text = $"Aprovação: {q1ResponseCount} | Final: {q2ResponseCount}";
 		ReportsApprovedCausesValueTextBlock.Text = ((totalCauses > 0) ? $"{approvedCauses}/{totalCauses}" : "-");
 		if (ahpCrPercent.HasValue)
 		{
@@ -2210,10 +2216,10 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 			reportTopTopsisRows.Add(new TopsisTableRow(row.Id, row.Cause, row.Rank));
 		}
 		ReportsTopTopsisStatusTextBlock.Text = ((reportTopTopsisRows.Count > 0) ? $"Top {reportTopTopsisRows.Count} causas no ranking final." : "Importe as respostas finais para exibir o ranking.");
-		string q1Import = BuildFileImportLabel("q1.csv");
-		string q2Import = BuildFileImportLabel("q2.csv");
-		string causesImport = BuildFileImportLabel("causas.csv");
-		ReportsTextBlock.Text = $"Últimas importações: validação ({q1Import}) | final ({q2Import}) | causas ({causesImport}).";
+		string q1Import = BuildFileImportLabel(ValidationCsvFileName);
+		string q2Import = BuildFileImportLabel(FinalAnswersCsvFileName);
+		string causesImport = BuildFileImportLabel(CausesCsvFileName);
+		ReportsTextBlock.Text = $"Últimas importações: aprovação ({q1Import}) | ranking final ({q2Import}) | causas ({causesImport}).";
 	}
 
 	private static int TryParseRank(string rank)
@@ -2227,24 +2233,36 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 
 	private string BuildFileImportLabel(string fileName)
 	{
+		string displayName = BuildUserFileName(fileName);
 		if (currentProject == null)
 		{
-			return fileName + ": -";
+			return displayName + ": -";
 		}
 		string filePath = Path.Combine(currentProject.FolderPath, fileName);
 		if (!File.Exists(filePath))
 		{
-			return fileName + ": não importado";
+			return displayName + ": não importado";
 		}
 		try
 		{
 			DateTime modifiedAt = File.GetLastWriteTime(filePath);
-			return $"{fileName}: {modifiedAt:dd/MM/yyyy HH:mm}";
+			return $"{displayName}: {modifiedAt:dd/MM/yyyy HH:mm}";
 		}
 		catch
 		{
-			return fileName + ": erro ao ler data";
+			return displayName + ": erro ao ler data";
 		}
+	}
+
+	private static string BuildUserFileName(string fileName)
+	{
+		return fileName switch
+		{
+			ValidationCsvFileName => "respostas de aprovação",
+			FinalAnswersCsvFileName => "respostas do ranking final",
+			CausesCsvFileName => "lista de causas",
+			_ => fileName
+		};
 	}
 
 	private string BuildReportsSummaryText()
@@ -2264,7 +2282,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		stringBuilder = builder;
 		StringBuilder stringBuilder3 = stringBuilder;
 		handler = new StringBuilder.AppendInterpolatedStringHandler(17, 1, stringBuilder);
-		handler.AppendLiteral("Respondentes da validação: ");
+		handler.AppendLiteral("Respondentes da aprovação: ");
 		handler.AppendFormatted(q1ResponseCount);
 		stringBuilder3.AppendLine(ref handler);
 		stringBuilder = builder;
@@ -2281,6 +2299,16 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		handler.AppendLiteral("/");
 		handler.AppendFormatted(totalCauses);
 		stringBuilder5.AppendLine(ref handler);
+		builder.AppendLine("Critérios de aprovação: " + BuildApprovalCriteriaSummary());
+		if (groups.Count > 0)
+		{
+			builder.AppendLine("Peso dos grupos:");
+			foreach (NamedListItem group in groups)
+			{
+				string weightText = ahpWeightsByGroupId.TryGetValue(group.ItemId, out var weight) ? ((weight * 100.0).ToString("F1", CultureInfo.CurrentCulture) + "%") : "-";
+				builder.AppendLine(group.ItemId + " - " + group.Name + ": " + weightText);
+			}
+		}
 		stringBuilder = builder;
 		StringBuilder stringBuilder6 = stringBuilder;
 		handler = new StringBuilder.AppendInterpolatedStringHandler(15, 1, stringBuilder);
@@ -2314,7 +2342,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		StringBuilder stringBuilder = builder;
 		StringBuilder stringBuilder2 = stringBuilder;
 		StringBuilder.AppendInterpolatedStringHandler handler = new StringBuilder.AppendInterpolatedStringHandler(23, 1, stringBuilder);
-		handler.AppendLiteral("Resumo;Respondentes_Validacao;");
+		handler.AppendLiteral("Resumo;Respondentes_Aprovacao;");
 		handler.AppendFormatted(q1ResponseCount.ToString(CultureInfo.InvariantCulture));
 		stringBuilder2.AppendLine(ref handler);
 		stringBuilder = builder;
@@ -2350,21 +2378,29 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		stringBuilder = builder;
 		StringBuilder stringBuilder8 = stringBuilder;
 		handler = new StringBuilder.AppendInterpolatedStringHandler(21, 1, stringBuilder);
-		handler.AppendLiteral("Resumo;Importacao_Validacao;");
-		handler.AppendFormatted(EscapeCsvValue(BuildFileImportLabel("q1.csv")));
+		handler.AppendLiteral("Resumo;Importacao_Aprovacao;");
+		handler.AppendFormatted(EscapeCsvValue(BuildFileImportLabel(ValidationCsvFileName)));
 		stringBuilder8.AppendLine(ref handler);
 		stringBuilder = builder;
 		StringBuilder stringBuilder9 = stringBuilder;
 		handler = new StringBuilder.AppendInterpolatedStringHandler(21, 1, stringBuilder);
 		handler.AppendLiteral("Resumo;Importacao_Final;");
-		handler.AppendFormatted(EscapeCsvValue(BuildFileImportLabel("q2.csv")));
+		handler.AppendFormatted(EscapeCsvValue(BuildFileImportLabel(FinalAnswersCsvFileName)));
 		stringBuilder9.AppendLine(ref handler);
 		stringBuilder = builder;
 		StringBuilder stringBuilder10 = stringBuilder;
 		handler = new StringBuilder.AppendInterpolatedStringHandler(25, 1, stringBuilder);
 		handler.AppendLiteral("Resumo;Importacao_causas;");
-		handler.AppendFormatted(EscapeCsvValue(BuildFileImportLabel("causas.csv")));
+		handler.AppendFormatted(EscapeCsvValue(BuildFileImportLabel(CausesCsvFileName)));
 		stringBuilder10.AppendLine(ref handler);
+		builder.AppendLine("Criterios;Mediana_Minima;" + EscapeCsvValue(BuildValidationMedianThreshold().ToString("F0", CultureInfo.CurrentCulture)));
+		builder.AppendLine("Criterios;Concordancia_Minima_Percentual;" + EscapeCsvValue(BuildValidationProportionThreshold().ToString("F0", CultureInfo.CurrentCulture)));
+		builder.AppendLine("Criterios;Notas_Consideradas_Positivas;" + EscapeCsvValue(BuildSelectedScaleValuesText()));
+		foreach (NamedListItem group in groups)
+		{
+			string weightText = ahpWeightsByGroupId.TryGetValue(group.ItemId, out var weight) ? ((weight * 100.0).ToString("F1", CultureInfo.CurrentCulture) + "%") : "-";
+			builder.AppendLine("Peso_Grupos;" + EscapeCsvValue(group.ItemId + " - " + group.Name) + ";" + EscapeCsvValue(weightText));
+		}
 		foreach (TopsisTableRow row in q2Rows.OrderBy((TopsisTableRow item) => TryParseRank(item.Rank)).Take(10))
 		{
 			stringBuilder = builder;
@@ -2377,6 +2413,31 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 			stringBuilder11.AppendLine(ref handler);
 		}
 		return builder.ToString();
+	}
+
+	private string BuildApprovalCriteriaSummary()
+	{
+		return "mediana mínima " + BuildValidationMedianThreshold().ToString("F0", CultureInfo.CurrentCulture) + "; concordância mínima " + BuildValidationProportionThreshold().ToString("F0", CultureInfo.CurrentCulture) + "%; notas positivas " + BuildSelectedScaleValuesText();
+	}
+
+	private double BuildValidationMedianThreshold()
+	{
+		return ((object)ValidationMedianNumberBox != null && !double.IsNaN(ValidationMedianNumberBox.Value)) ? RoundValidationInteger(ValidationMedianNumberBox.Value, 1.0, 5.0) : 3.0;
+	}
+
+	private double BuildValidationProportionThreshold()
+	{
+		return ((object)ValidationProportionNumberBox != null && !double.IsNaN(ValidationProportionNumberBox.Value)) ? RoundValidationInteger(ValidationProportionNumberBox.Value, 0.0, 100.0) : 70.0;
+	}
+
+	private string BuildSelectedScaleValuesText()
+	{
+		HashSet<int> values = ((object)Scale1CheckBox == null) ? new HashSet<int> { 3, 4, 5 } : GetSelectedScaleValues();
+		if (values.Count == 0)
+		{
+			return "nenhuma";
+		}
+		return string.Join(", ", values.OrderBy((int value) => value));
 	}
 
 	private static string EscapeCsvValue(string value)
@@ -2801,12 +2862,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		{
 			return;
 		}
-		if (!string.Equals(Path.GetFileName(sourceCsvPath), "causas.csv", StringComparison.OrdinalIgnoreCase))
-		{
-			await ShowMessageAsync("Arquivo inválido", "Selecione um arquivo chamado causas.csv.");
-			return;
-		}
-		string destinationCsvPath = Path.Combine(currentProject.FolderPath, "causas.csv");
+		string destinationCsvPath = Path.Combine(currentProject.FolderPath, CausesCsvFileName);
 		try
 		{
 			Directory.CreateDirectory(currentProject.FolderPath);
@@ -2814,14 +2870,14 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		}
 		catch (Exception ex)
 		{
-			UpdateCausesStatus("Erro ao importar causas.csv.");
-			await ShowMessageAsync("Erro ao importar", "Não foi possível importar causas.csv.\n\n" + ex.Message);
+			UpdateCausesStatus("Erro ao importar a lista de causas.");
+			await ShowMessageAsync("Erro ao importar", "Não foi possível importar a lista de causas.\n\n" + ex.Message);
 			return;
 		}
 		CauseImportResult result = ProjectCausesRepository.ImportFromCsvFile(destinationCsvPath, causes.Select((NamedListItem item) => item.Name));
 		if (!result.FileFound)
 		{
-			UpdateCausesStatus("Erro ao importar causas.csv.");
+			UpdateCausesStatus("Erro ao importar a lista de causas.");
 			await ShowMessageAsync("Arquivo não encontrado", "Arquivo não encontrado em:\n" + result.CsvPath);
 			return;
 		}
@@ -2845,19 +2901,19 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 
 	private async void OnDownloadCausesTemplateClicked(object sender, RoutedEventArgs e)
 	{
-		string csvSavePath = await PickCsvSavePathAsync();
+		string csvSavePath = await PickCsvSavePathAsync(BuildSuggestedFileName("modelo_causas_evasao"));
 		if (!string.IsNullOrWhiteSpace(csvSavePath))
 		{
 			try
 			{
 				ProjectCausesRepository.ExportTemplateCsvToFile(csvSavePath, overwriteExisting: true);
-				await ShowMessageAsync("Modelo salvo", "Modelo causas.csv salvo em:\n" + csvSavePath);
-				UpdateCausesStatus("Modelo causas.csv exportado.");
+				await ShowMessageAsync("Modelo salvo", "Modelo da lista de causas salvo em:\n" + csvSavePath);
+				UpdateCausesStatus("Modelo da lista de causas exportado.");
 			}
 			catch (Exception ex)
 			{
-				await ShowMessageAsync("Erro ao baixar modelo", "Não foi possível salvar o modelo causas.csv.\n\n" + ex.Message);
-				UpdateCausesStatus("Erro ao exportar modelo causas.csv.");
+				await ShowMessageAsync("Erro ao baixar modelo", "Não foi possível salvar o modelo da lista de causas.\n\n" + ex.Message);
+				UpdateCausesStatus("Erro ao exportar o modelo da lista de causas.");
 			}
 		}
 	}
@@ -2945,7 +3001,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		};
 		exportTemplateButton.Click += async delegate
 		{
-			string csvSavePath = await PickCsvSavePathAsync();
+			string csvSavePath = await PickCsvSavePathAsync(BuildSuggestedFileName("modelo_causas_evasao"));
 			if (string.IsNullOrWhiteSpace(csvSavePath))
 			{
 				exportStatusText.Text = "Download do modelo cancelado.";
@@ -2999,7 +3055,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		return (await obj.PickSingleFileAsync())?.Path;
 	}
 
-	private async Task<string?> PickCsvSavePathAsync(string suggestedFileName = "causas")
+	private async Task<string?> PickCsvSavePathAsync(string suggestedFileName = "lista_causas_evasao")
 	{
 		if ((object)App.MainWindowInstance == null)
 		{
@@ -3019,6 +3075,40 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		return (await obj.PickSaveFileAsync())?.Path;
 	}
 
+	private string BuildSuggestedFileName(string baseName)
+	{
+		if (currentProject == null)
+		{
+			return baseName;
+		}
+		string projectSlug = BuildFileNameSlug(BuildProjectDisplayName(currentProject));
+		return string.IsNullOrWhiteSpace(projectSlug) ? baseName : (baseName + "_" + projectSlug);
+	}
+
+	private static string BuildFileNameSlug(string value)
+	{
+		if (string.IsNullOrWhiteSpace(value))
+		{
+			return string.Empty;
+		}
+		StringBuilder builder = new StringBuilder(value.Length);
+		bool previousWasSeparator = false;
+		foreach (char c in value.Trim())
+		{
+			if (char.IsLetterOrDigit(c))
+			{
+				builder.Append(char.ToLowerInvariant(c));
+				previousWasSeparator = false;
+			}
+			else if (!previousWasSeparator && builder.Length > 0)
+			{
+				builder.Append('_');
+				previousWasSeparator = true;
+			}
+		}
+		return builder.ToString().Trim('_');
+	}
+
 	private void LoadQ1TableForCurrentProject()
 	{
 		if (currentProject == null)
@@ -3032,7 +3122,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		}
 		else
 		{
-			string csvPath = Path.Combine(currentProject.FolderPath, "q1.csv");
+			string csvPath = Path.Combine(currentProject.FolderPath, ValidationCsvFileName);
 			LoadQ1TableFromFile(csvPath);
 		}
 	}
@@ -3044,7 +3134,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		q1ResponseCount = 0;
 		if (!File.Exists(csvPath))
 		{
-			TeamAssignmentsTextBlock.Text = "Importe as respostas de validação para aprovar as causas.";
+			TeamAssignmentsTextBlock.Text = "Importe as respostas da etapa de aprovação para aprovar as causas.";
 			ClearAhpComputedData();
 			RebuildAhpTableRows();
 			RefreshReportsSection();
@@ -3059,15 +3149,15 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 			RebuildQ1TableRows();
 			LoadAhpTableFromFile(csvPath);
 			RebuildQ2TableRows();
-			TeamAssignmentsTextBlock.Text = ((parsedRows.Count > 0) ? $"Respostas de validação carregadas com {parsedRows.Count} causas." : "Respostas de validação importadas, mas sem linhas válidas.");
+			TeamAssignmentsTextBlock.Text = ((parsedRows.Count > 0) ? $"Respostas de aprovação carregadas com {parsedRows.Count} causas." : "Respostas de aprovação importadas, mas sem linhas válidas.");
 			RefreshReportsSection();
 		}
 		catch (Exception ex)
 		{
-			TeamAssignmentsTextBlock.Text = "Erro ao ler as respostas de validação: " + ex.Message;
+			TeamAssignmentsTextBlock.Text = "Erro ao ler as respostas de aprovação: " + ex.Message;
 			q1ResponseCount = 0;
 			ClearAhpComputedData();
-			RebuildAhpTableRows("Erro ao calcular os pesos dos grupos a partir das respostas de validação.");
+			RebuildAhpTableRows("Erro ao calcular os pesos dos grupos a partir das respostas de aprovação.");
 			RebuildQ2TableRows();
 			RefreshReportsSection();
 		}
@@ -3089,7 +3179,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 			double median = tuple.Median;
 			double proportion = tuple.Proportion;
 			string status = ((median >= medianThreshold && proportion >= proportionThreshold) ? "Aprovada" : "Reprovada");
-			q1Rows.Add(new Q1TableRow(row.Number, row.Cause, row.Value1, row.Value2, row.Value3, row.Value4, row.Value5, median.ToString("F1", CultureInfo.CurrentCulture), proportion.ToString("F1", CultureInfo.CurrentCulture) + "%", status));
+			q1Rows.Add(new Q1TableRow(row.Number, row.Cause, row.Value1, row.Value2, row.Value3, row.Value4, row.Value5, median.ToString("F0", CultureInfo.CurrentCulture), proportion.ToString("F0", CultureInfo.CurrentCulture) + "%", status));
 		}
 		RefreshReportsSection();
 	}
@@ -3105,7 +3195,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		}
 		else
 		{
-			string csvPath = Path.Combine(currentProject.FolderPath, "q2.csv");
+			string csvPath = Path.Combine(currentProject.FolderPath, FinalAnswersCsvFileName);
 			LoadQ2TableFromFile(csvPath);
 		}
 	}
@@ -3166,7 +3256,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		}
 		if (!TryBuildTopsisCriteriaWeights(criteriaCount, out double[] weights))
 		{
-			TopsisStatusTextBlock.Text = $"Respostas finais carregadas com {q2ResponseCount} respostas e {q2Alternatives.Count} causas, mas ainda faltam os pesos dos grupos. " + "Importe as respostas de validação para calcular os pesos.";
+			TopsisStatusTextBlock.Text = $"Respostas finais carregadas com {q2ResponseCount} respostas e {q2Alternatives.Count} causas, mas ainda faltam os pesos dos grupos. " + "Importe as respostas de aprovação para calcular os pesos.";
 			RefreshReportsSection();
 			return;
 		}
@@ -3286,7 +3376,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		List<string> groupIds = groups.Select((NamedListItem group) => group.ItemId.Trim()).ToList();
 		if (!TryParseAhpFromFormsCsv(csvPath, groupNames, groupIds, out AhpComputationResult result) || result == null)
 		{
-			RebuildAhpTableRows("Respostas de validação sem comparações válidas para calcular os pesos.");
+			RebuildAhpTableRows("Respostas de aprovação sem comparações válidas para calcular os pesos.");
 			return;
 		}
 		for (int i = 0; i < groups.Count; i++)
@@ -4554,23 +4644,18 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		{
 			return;
 		}
-		if (!string.Equals(Path.GetFileName(sourceCsvPath), "q1.csv", StringComparison.OrdinalIgnoreCase))
-		{
-			await ShowMessageAsync("Arquivo inválido", "Selecione o arquivo q1.csv exportado do questionário de validação.");
-			return;
-		}
-		string destinationCsvPath = Path.Combine(currentProject.FolderPath, "q1.csv");
+		string destinationCsvPath = Path.Combine(currentProject.FolderPath, ValidationCsvFileName);
 		try
 		{
 			Directory.CreateDirectory(currentProject.FolderPath);
 			File.Copy(sourceCsvPath, destinationCsvPath, overwrite: true);
 			LoadQ1TableFromFile(destinationCsvPath);
 			MarkProjectAsModified();
-			await ShowMessageAsync("Importação concluída", "Respostas de validação importadas para:\n" + destinationCsvPath);
+			await ShowMessageAsync("Importação concluída", "Respostas de aprovação importadas para:\n" + destinationCsvPath);
 		}
 		catch (Exception ex)
 		{
-			await ShowMessageAsync("Erro ao importar", "Não foi possível importar as respostas de validação.\n\n" + ex.Message);
+			await ShowMessageAsync("Erro ao importar", "Não foi possível importar as respostas de aprovação. Verifique se o CSV veio do questionário de validação das causas.\n\n" + ex.Message);
 		}
 	}
 
@@ -4746,7 +4831,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		FileSavePicker obj = new FileSavePicker
 		{
 			SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
-			SuggestedFileName = "q1",
+			SuggestedFileName = BuildSuggestedFileName("formulario_validacao_causas"),
 			FileTypeChoices = { 
 			{
 				"Texto",
@@ -4803,7 +4888,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		FileSavePicker obj = new FileSavePicker
 		{
 			SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
-			SuggestedFileName = "q2",
+			SuggestedFileName = BuildSuggestedFileName("formulario_ranking_final"),
 			FileTypeChoices = { 
 			{
 				"Texto",
@@ -4820,7 +4905,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 				string institution = (currentProject.Name ?? string.Empty).Trim();
 				string course = (currentProject.Course ?? string.Empty).Trim();
 				string q2Description = "Prezado(a) participante,\n\nEste questionário ajuda a medir a intensidade das causas aprovadas na etapa anterior. Sua resposta é anônima e será usada para montar o ranking final de prioridades da escola ou curso. O tempo estimado de preenchimento é de 5 minutos.";
-				string content = BuildFormsAppsScript(groupNames, groupIds, causeRows, institution, course, "QUESTIONÁRIO FINAL - INTENSIDADE DAS CAUSAS", q2Description, null, includePairQuestions: false, includeAllGroupsInVinculoQuestion: true, useGroupCodesInVinculoQuestion: false, includeProfilePrincipalAtuacaoQuestion: false);
+				string content = BuildFormsAppsScript(groupNames, groupIds, causeRows, institution, course, "QUESTIONÁRIO FINAL - RANKING DAS CAUSAS DE EVASÃO", q2Description, null, includePairQuestions: false, includeAllGroupsInVinculoQuestion: true, useGroupCodesInVinculoQuestion: false, includeProfilePrincipalAtuacaoQuestion: false);
 				await FileIO.WriteTextAsync(selectedFile, content);
 				await ShowQ2ExportNextStepsDialogAsync(saveLocation, content);
 			}
@@ -5117,17 +5202,22 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 
 	private async Task ShowQ1ExportNextStepsDialogAsync(string saveLocation, string scriptContent)
 	{
-		await ShowFormsExportNextStepsDialogAsync(saveLocation, "q1.txt", "q1.csv", includesPairQuestions: true, scriptContent);
+		await ShowFormsExportNextStepsDialogAsync(saveLocation, "Importar respostas de aprovação", includesPairQuestions: true, scriptContent);
 	}
 
 	private async Task ShowQ2ExportNextStepsDialogAsync(string saveLocation, string scriptContent)
 	{
-		await ShowFormsExportNextStepsDialogAsync(saveLocation, "q2.txt", "q2.csv", includesPairQuestions: false, scriptContent);
+		await ShowFormsExportNextStepsDialogAsync(saveLocation, "Importar respostas finais", includesPairQuestions: false, scriptContent);
 	}
 
-	private async Task ShowFormsExportNextStepsDialogAsync(string saveLocation, string txtFileName, string csvFileName, bool includesPairQuestions, string scriptContent)
+	private async Task ShowFormsExportNextStepsDialogAsync(string saveLocation, string importButtonLabel, bool includesPairQuestions, string scriptContent)
 	{
-		string instructions = "1. Acesse https://script.google.com/ e crie um projeto.\n2. Abra Código.gs e apague o conteúdo atual.\n3. Cole todo o conteúdo do arquivo " + txtFileName + ".\n4. Salve e execute a função criarFormulario.\n5. Autorize as permissões solicitadas pelo Google.\n6. Abra o Google Forms criado e compartilhe o link com os participantes.\n7. Depois da coleta, exporte as respostas como " + csvFileName + " e importe aqui no app.";
+		string savedFileName = Path.GetFileName(saveLocation);
+		if (string.IsNullOrWhiteSpace(savedFileName))
+		{
+			savedFileName = "arquivo salvo";
+		}
+		string instructions = "1. Acesse https://script.google.com/ e crie um projeto.\n2. Abra Código.gs e apague o conteúdo atual.\n3. Cole todo o conteúdo do arquivo " + savedFileName + ".\n4. Salve e execute a função criarFormulario.\n5. Autorize as permissões solicitadas pelo Google.\n6. Abra o Google Forms criado e compartilhe o link com os participantes.\n7. Depois da coleta, baixe as respostas em CSV no Google Forms.\n8. No SIGEV, use o botão \"" + importButtonLabel + "\". Não é preciso renomear o CSV baixado.";
 		StackPanel contentPanel = new StackPanel
 		{
 			Spacing = 8.0,
@@ -5198,12 +5288,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		{
 			return;
 		}
-		if (!string.Equals(Path.GetFileName(sourceCsvPath), "q2.csv", StringComparison.OrdinalIgnoreCase))
-		{
-			await ShowMessageAsync("Arquivo inválido", "Selecione o arquivo q2.csv exportado do questionário final.");
-			return;
-		}
-		string destinationCsvPath = Path.Combine(currentProject.FolderPath, "q2.csv");
+		string destinationCsvPath = Path.Combine(currentProject.FolderPath, FinalAnswersCsvFileName);
 		try
 		{
 			Directory.CreateDirectory(currentProject.FolderPath);
@@ -5214,7 +5299,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		}
 		catch (Exception ex)
 		{
-			await ShowMessageAsync("Erro ao importar", "Não foi possível importar as respostas finais.\n\n" + ex.Message);
+			await ShowMessageAsync("Erro ao importar", "Não foi possível importar as respostas finais. Verifique se o CSV veio do questionário final.\n\n" + ex.Message);
 		}
 	}
 
@@ -5263,7 +5348,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 		{
 			return;
 		}
-		string csvSavePath = await PickCsvSavePathAsync("relatorio");
+		string csvSavePath = await PickCsvSavePathAsync(BuildSuggestedFileName("relatorio_sigev"));
 		if (string.IsNullOrWhiteSpace(csvSavePath))
 		{
 			return;
@@ -5527,10 +5612,10 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 			SetButtonText(target, "Atualizar relatório").Click += OnRefreshReportsClicked;
 			break;
 		case 16:
-			SetButtonText(target, "Exportar relatório").Click += OnExportReportsCsvClicked;
+			SetButtonText(target, "Exportar relatório em CSV").Click += OnExportReportsCsvClicked;
 			break;
 		case 17:
-			target.As<Button>().Click += OnCopyReportsSummaryClicked;
+			SetButtonText(target, "Copiar resumo do relatório").Click += OnCopyReportsSummaryClicked;
 			break;
 		case 18:
 			SetButtonText(target, "Importar respostas finais").Click += OnImportQ2CsvClicked;
@@ -5574,7 +5659,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 			Q1TableListView = target.As<ListView>();
 			break;
 		case 53:
-			SetButtonText(target, "Limpar validação").Click += OnClearQ1TableClicked;
+			SetButtonText(target, "Limpar aprovação").Click += OnClearQ1TableClicked;
 			break;
 		case 54:
 			Scale5CheckBox = target.As<CheckBox>();
@@ -5612,7 +5697,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 			ValidationMedianNumberBox.LostFocus += OnValidationMedianLostFocus;
 			break;
 		case 61:
-			SetButtonText(target, "Importar respostas de validação").Click += OnImportQ1CsvClicked;
+			SetButtonText(target, "Importar respostas de aprovação").Click += OnImportQ1CsvClicked;
 			break;
 		case 62:
 			CausesStatusTextBlock = target.As<TextBlock>();
@@ -5631,7 +5716,7 @@ public sealed class ProjectDetailsPage : Page, IComponentConnector
 			SetButtonText(target, "Importar lista de causas").Click += OnImportCausesCsvClicked;
 			break;
 		case 75:
-			target.As<Button>().Click += OnDownloadCausesTemplateClicked;
+			SetButtonText(target, "Baixar modelo de causas").Click += OnDownloadCausesTemplateClicked;
 			break;
 		case 76:
 			SetButtonText(target, "Limpar causas possíveis").Click += OnClearCausesClicked;

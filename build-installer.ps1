@@ -77,7 +77,8 @@ function Write-DistributionExtras {
     $readme = @"
 SIGEV - Sistema Inteligente de Gestão da Evasão
 
-Para abrir o aplicativo, execute PrimeiraTelaWinUI.exe.
+Para abrir o aplicativo por esta pasta, execute Abrir SIGEV.bat.
+Para distribuição aos usuários finais, envie o instalador SIGEV-Setup-x64.exe.
 Os arquivos de exemplo ficam na pasta Exemplos.
 "@
     Set-Content -LiteralPath (Join-Path $publishDir "LEIA-ME.txt") -Value $readme -Encoding UTF8

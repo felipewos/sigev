@@ -1,0 +1,51 @@
+\section{Reivindicações -- minuta preliminar}
+
+\textbf{Importante}: as reivindicações abaixo são rascunho técnico. Devem ser revisadas por profissional especializado antes do depósito.
+
+\begin{enumerate}
+  \item Método implementado por computador para priorização de causas de evasão escolar, caracterizado por compreender:
+  \begin{enumerate}[label=\alph*)]
+    \item armazenar, em memória computacional, dados de um projeto educacional, grupos participantes e causas possíveis de evasão;
+    \item gerar, por processador, um primeiro conjunto de instruções para criação de formulário digital de avaliação das causas e comparação entre grupos participantes;
+    \item receber arquivo de respostas do referido formulário digital;
+    \item agregar, para cada causa possível, frequências de respostas em escala ordinal;
+    \item calcular, para cada causa possível, uma mediana discreta a partir das frequências agregadas;
+    \item calcular, para cada causa possível, uma concordância percentual a partir de notas previamente selecionadas como positivas;
+    \item aprovar uma causa quando a mediana discreta atende a um limite mínimo e a concordância percentual atende a um limite mínimo;
+    \item calcular pesos dos grupos participantes a partir de comparações pareadas;
+    \item gerar um segundo conjunto de instruções para criação de formulário digital contendo as causas aprovadas;
+    \item receber arquivo de respostas finais relativo às causas aprovadas; e
+    \item gerar, com base nos pesos dos grupos participantes e nas respostas finais, ranking ordenado das causas aprovadas.
+  \end{enumerate}
+
+  \item Método, de acordo com a reivindicação 1, caracterizado pelo fato de que a escala ordinal compreende notas de 1 a 5.
+
+  \item Método, de acordo com qualquer uma das reivindicações anteriores, caracterizado pelo fato de que as notas positivas são configuráveis pelo usuário.
+
+  \item Método, de acordo com qualquer uma das reivindicações anteriores, caracterizado pelo fato de que a mediana mínima é configurável em valores inteiros de 1 a 5.
+
+  \item Método, de acordo com qualquer uma das reivindicações anteriores, caracterizado pelo fato de que a concordância mínima é configurável em percentual inteiro.
+
+  \item Método, de acordo com qualquer uma das reivindicações anteriores, caracterizado pelo fato de que os pesos dos grupos participantes são obtidos a partir de matriz recíproca formada por comparações pareadas.
+
+  \item Método, de acordo com a reivindicação 6, caracterizado por calcular uma razão de consistência das comparações pareadas e sinalizar inconsistência quando a razão excede limite configurável.
+
+  \item Método, de acordo com qualquer uma das reivindicações anteriores, caracterizado por gerar relatório contendo pelo menos: número de respondentes, causas aprovadas, critérios de aprovação, pesos dos grupos e ranking final.
+
+  \item Sistema computacional para priorização de causas de evasão escolar, caracterizado por compreender:
+  \begin{enumerate}[label=\alph*)]
+    \item uma interface de cadastro de projetos, grupos participantes e causas possíveis;
+    \item um módulo de geração de formulários digitais;
+    \item um módulo de importação de respostas em CSV;
+    \item um módulo de aprovação de causas por mediana e concordância;
+    \item um módulo de cálculo de pesos de grupos participantes;
+    \item um módulo de ranking final; e
+    \item um módulo de relatório.
+  \end{enumerate}
+
+  \item Sistema, de acordo com a reivindicação 9, caracterizado pelo fato de que o módulo de geração de formulários digitais produz scripts executáveis em ambiente de criação de formulários online.
+
+  \item Sistema, de acordo com a reivindicação 9 ou 10, caracterizado pelo fato de que o módulo de importação aceita arquivo CSV com nome arbitrário e armazena cópia interna padronizada no projeto.
+
+  \item Meio de armazenamento legível por computador, não transitório, contendo instruções que, quando executadas por processador, realizam o método definido em qualquer uma das reivindicações 1 a 8.
+\end{enumerate}

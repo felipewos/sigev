@@ -1,6 +1,6 @@
 function criarFormulario() {
-  var form = FormApp.create('QUESTIONÁRIO DE PRÉ-TESTE – VALIDAÇÃO DAS CAUSAS DE EVASÃO\nE JULGAMENTOS AHP');
-  form.setDescription('Prezados(as),\n\nEste instrumento faz parte da etapa de pré-teste da pesquisa de mestrado sobre a evasão no curso de curso não informado do(a) Projeto 2. Seus objetivos são: (1) validar a clareza e a relevância das causas de evasão identificadas na literatura; e (2) definir os pesos dos grupos de atores para a tomada de decisão. A participação é voluntária e anônima. O tempo estimado de preenchimento é de 10 a 15 minutos.');
+  var form = FormApp.create('QUESTIONÁRIO DE VALIDAÇÃO DAS CAUSAS\nE PESO DOS GRUPOS');
+  form.setDescription('Prezados(as),\n\nEste questionário ajuda a validar as possíveis causas de evasão e também coleta comparações entre grupos participantes para definir os pesos usados na priorização. A participação é voluntária e anônima. O tempo estimado de preenchimento é de 10 a 15 minutos.');
   var termoConsentimento = form.addMultipleChoiceItem();
   termoConsentimento.setTitle('TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO (TCLE)');
   termoConsentimento.setHelpText('Declaro que li e compreendi as informações desta pesquisa. Minha participação é voluntária, posso interromper a qualquer momento e autorizo o uso das respostas para fins acadêmicos, de forma anônima.');
@@ -54,7 +54,7 @@ function criarFormulario() {
   causasItem.setRequired(true);
 
   var secaoComparacoesAhp = form.addPageBreakItem();
-  secaoComparacoesAhp.setTitle('JULGAMENTOS PARA O AHP');
+  secaoComparacoesAhp.setTitle('COMPARAÇÃO DE IMPORTÂNCIA DOS GRUPOS');
   secaoComparacoesAhp.setHelpText('Nesta seção, pedimos que você compare a importância relativa das percepções de cada grupo para definir prioridades de ações contra a evasão, utilizando a escala Saaty de 1 a 9.\n\n1 = Igual\n3 = Moderada\n5 = Forte\n7 = Muito forte\n9 = Extrema\n\n2, 4, 6, 8 Valores intermediários entre os julgamentos anteriores');
 
   var pergunta2 = form.addMultipleChoiceItem();

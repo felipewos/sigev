@@ -1,0 +1,80 @@
+\section{Relatório descritivo -- minuta de pedido de patente}
+
+\subsection{Título}
+
+Método computacional e sistema de apoio à decisão para gestão da evasão escolar com aprovação robusta de causas e priorização multicritério ponderada por grupos participantes.
+
+\subsection{Campo da invenção}
+
+A presente invenção refere-se a sistemas computacionais de apoio à decisão aplicados à gestão educacional, especialmente à identificação, aprovação e priorização de causas de evasão escolar ou acadêmica por meio de coleta estruturada de dados, análise estatística de respostas e ponderação multicritério de grupos participantes.
+
+\subsection{Estado da técnica}
+
+Gestores escolares e acadêmicos frequentemente coletam percepções sobre evasão por formulários, entrevistas ou planilhas. Em fluxos tradicionais, as causas são listadas manualmente, as respostas são consolidadas em planilhas e as prioridades são definidas por média simples, votação direta ou julgamento subjetivo. Esses procedimentos tendem a apresentar pelo menos quatro limitações:
+
+\begin{enumerate}
+  \item dificuldade de padronizar a coleta entre cursos, escolas e grupos de respondentes;
+  \item fragilidade na aprovação inicial das causas, especialmente quando poucos respondentes extremos deslocam médias;
+  \item ausência de ponderação transparente entre grupos participantes;
+  \item retrabalho para transformar respostas em ranking final de prioridades.
+\end{enumerate}
+
+Há ferramentas genéricas de formulários, planilhas e análise multicritério, mas elas não oferecem, em um único fluxo operacional, a geração do questionário, a aprovação por mediana e concordância, a ponderação de grupos e a priorização final das causas de evasão.
+
+\subsection{Problema técnico}
+
+O problema a ser resolvido é prover um fluxo computacional reprodutível que receba causas de evasão, colete avaliações de grupos participantes, aprove somente causas com evidência mínima de relevância, calcule pesos de grupos a partir de comparações pareadas e gere ranking final de prioridades com rastreabilidade dos critérios usados.
+
+\subsection{Solução proposta}
+
+A solução proposta é um método implementado por computador e um sistema correspondente que:
+
+\begin{enumerate}
+  \item registra projetos por instituição e curso;
+  \item registra grupos participantes e causas possíveis de evasão;
+  \item gera automaticamente scripts para criação de questionários digitais;
+  \item importa respostas dos questionários em formato CSV;
+  \item agrega respostas Likert de 1 a 5 por causa;
+  \item calcula mediana discreta de cada causa;
+  \item calcula concordância percentual com base em notas positivas configuráveis;
+  \item aprova causas quando mediana e concordância atendem aos limites definidos;
+  \item calcula pesos dos grupos participantes por comparações pareadas e razão de consistência;
+  \item coleta respostas finais apenas para causas aprovadas;
+  \item monta matriz multicritério e gera ranking final das causas aprovadas;
+  \item exporta relatório com critérios, pesos e ranking.
+\end{enumerate}
+
+\subsection{Efeito técnico e vantagens}
+
+Em comparação com fluxo manual por planilhas, a solução:
+
+\begin{itemize}
+  \item reduz inconsistências de importação e consolidação;
+  \item substitui média simples por mediana discreta, reduzindo sensibilidade a respostas extremas;
+  \item incorpora concordância mínima, evitando aprovação de causas sem apoio suficiente;
+  \item torna explícito o peso de cada grupo participante;
+  \item gera ranking final rastreável e reprodutível;
+  \item permite replicação do processo em diferentes escolas, cursos e instituições.
+\end{itemize}
+
+\subsection{Descrição detalhada de uma concretização}
+
+Em uma concretização preferencial, o sistema é executado em computador pessoal com sistema operacional Windows. O usuário cria um projeto e informa instituição e curso. Em seguida, cadastra grupos participantes e uma lista inicial de causas possíveis de evasão.
+
+O sistema gera um primeiro script para Google Apps Script. Ao ser executado, o script cria um formulário digital contendo perfil do respondente, grade Likert para avaliação das causas e perguntas de comparação entre grupos participantes. Após a coleta, o sistema importa o CSV exportado pelo Google Forms.
+
+Para cada causa, o sistema conta as respostas em cada nota de 1 a 5. A mediana discreta é obtida percorrendo as frequências acumuladas até alcançar a posição mediana. A concordância é calculada pela razão entre o número de respostas em notas previamente selecionadas como positivas e o total de respostas válidas. Por padrão, as notas positivas são 3, 4 e 5; a mediana mínima é 3; e a concordância mínima é 70\%.
+
+Uma causa é aprovada quando sua mediana é maior ou igual à mediana mínima e sua concordância é maior ou igual à concordância mínima. As causas reprovadas não seguem para o questionário final.
+
+Para ponderar os grupos participantes, o sistema interpreta comparações pareadas respondidas no primeiro questionário. A partir dessas comparações, monta matriz recíproca, calcula vetor de prioridades dos grupos e estima razão de consistência. O limite de inconsistência pode ser configurado pelo usuário.
+
+O sistema gera um segundo script para formulário final contendo apenas as causas aprovadas. Após a segunda coleta, o sistema importa as respostas finais, monta matriz de decisão por causa e grupo participante, aplica os pesos calculados e ordena as alternativas para produzir ranking final de prioridade.
+
+\subsection{Aplicação industrial}
+
+A solução pode ser aplicada em escolas, institutos federais, universidades, secretarias de educação, cursos técnicos, cursos superiores e programas de gestão acadêmica que necessitem priorizar ações de permanência e redução da evasão.
+
+\subsection{Observação sobre patenteabilidade}
+
+Esta minuta deve ser revisada para verificar se a solução apresenta contribuição técnica patenteável além de regras de negócio, métodos matemáticos e programa de computador em si. Caso a análise conclua pela ausência de matéria patenteável, recomenda-se priorizar o registro de programa de computador e o enquadramento como produto técnico/tecnológico.
