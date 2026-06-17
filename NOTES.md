@@ -26,10 +26,22 @@ Comando de desenvolvimento:
 dotnet build PrimeiraTelaWinUI.csproj -c Debug
 ```
 
+Abrir o app para revisar alterações antes de gerar instalador:
+
+```powershell
+dotnet run --project PrimeiraTelaWinUI.csproj -c Debug
+```
+
 Comando de distribuição:
 
 ```powershell
-dotnet publish PrimeiraTelaWinUI.csproj -c Release -r win-x64 --self-contained true -o dist\SIGEV-Distribuicao
+.\build-installer.ps1
+```
+
+Se o Inno Setup ainda não estiver instalado:
+
+```powershell
+.\build-installer.ps1 -InstallInnoSetup
 ```
 
 Executável de distribuição:
@@ -41,12 +53,10 @@ dist\SIGEV-Distribuicao\PrimeiraTelaWinUI.exe
 Entrega final:
 
 ```text
-dist\SIGEV-Instalador.exe
-dist\SIGEV-Distribuicao\
-dist\SIGEV-Distribuicao.zip
+dist\SIGEV-Setup-x64.exe
 ```
 
-Use `dist\SIGEV-Instalador.exe` como arquivo final para instalação pelos usuários. O `PrimeiraTelaWinUI.exe` em `dist\SIGEV-Distribuicao\` é o executável interno do aplicativo publicado.
+Use `dist\SIGEV-Setup-x64.exe` como arquivo final para instalação pelos usuários. O `PrimeiraTelaWinUI.exe` em `dist\SIGEV-Distribuicao\` é o executável interno do aplicativo publicado e é empacotado pelo Inno Setup.
 
 ## Próximos ajustes possíveis
 

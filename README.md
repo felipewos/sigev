@@ -21,25 +21,37 @@ Build de desenvolvimento:
 dotnet build PrimeiraTelaWinUI.csproj -c Debug
 ```
 
+Abrir o app antes de gerar instalador, para testar os ajustes:
+
+```powershell
+dotnet run --project PrimeiraTelaWinUI.csproj -c Debug
+```
+
 Publicação para distribuição:
 
 ```powershell
 dotnet publish PrimeiraTelaWinUI.csproj -c Release -r win-x64 --self-contained true -o dist\SIGEV-Distribuicao
 ```
 
-Executável de distribuição:
+Gerar o instalador final:
 
-```text
-dist\SIGEV-Distribuicao\PrimeiraTelaWinUI.exe
+```powershell
+.\build-installer.ps1
+```
+
+Se o Inno Setup ainda não estiver instalado na máquina:
+
+```powershell
+.\build-installer.ps1 -InstallInnoSetup
 ```
 
 Arquivo final para instalação:
 
 ```text
-dist\SIGEV-Instalador.exe
+dist\SIGEV-Setup-x64.exe
 ```
 
-Esse é o arquivo único que deve ser enviado para os usuários finais. Ele instala o SIGEV, cria atalhos e abre o aplicativo.
+Esse é o arquivo único que deve ser enviado para os usuários finais. Ele abre o assistente de instalação, instala o SIGEV, cria atalhos e registra o app em Programas e Recursos.
 
 O executável interno gerado pela publicação fica em:
 
@@ -56,6 +68,7 @@ Observação: o build passa, mas ainda emite avisos de nulidade/código gerado q
 - `PrimeiraTelaWinUI/`: código C# principal do app.
 - `Views/`: XAML das telas.
 - `AppAssets/`: assets, recursos empacotados e dependências locais usadas pelo app.
+- `installer/`: script Inno Setup usado para gerar `SIGEV-Setup-x64.exe`.
 - `Samples/`: amostras de `causas.csv`, `q1.csv`, `q2.csv` e scripts `q1.txt`/`q2.txt`.
 - `NOTES.md`: notas do projeto.
 

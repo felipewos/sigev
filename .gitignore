@@ -2,9 +2,15 @@ bin/
 obj/
 .vs/
 
+_github_update/
+dist/SIGEV-Distribuicao/
+dist/*.zip
+dist/SIGEV-Instalador.exe
+dist/installer-src/
+dist/installer-out/
+
 *.user
 *.suo
 *.cache
 *.tmp
 *.log
-
