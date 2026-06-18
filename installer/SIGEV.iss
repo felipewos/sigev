@@ -48,13 +48,9 @@ Source: "{#MyAppSourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesub
 
 [InstallDelete]
 Type: files; Name: "{localappdata}\Programs\SIGEV\Desinstalar SIGEV.bat"
-Type: filesandordirs; Name: "{localappdata}\Programs\SADMAT"
-Type: files; Name: "{autodesktop}\SADMAT.lnk"
-Type: files; Name: "{autoprograms}\SADMAT.lnk"
 
 [Registry]
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Uninstall\SIGEV"; Flags: deletekey
-Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Uninstall\SADMAT"; Flags: deletekey
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; IconFilename: "{app}\Assets\SIGEV.ico"

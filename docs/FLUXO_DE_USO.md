@@ -69,5 +69,3 @@ Padrões atuais:
 ## Armazenamento local
 
 Os dados do app ficam em `%LocalAppData%\\SIGEV`, com um `projects.json` na raiz e uma pasta para cada projeto em `%LocalAppData%\\SIGEV\\Projects`.
-
-Se houver dados antigos em `%LocalAppData%\\SADMAT`, o app copia esses dados automaticamente na primeira execução para preservar projetos existentes.

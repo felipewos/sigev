@@ -7,18 +7,8 @@ namespace PrimeiraTelaWinUI.Data;
 public static class ProjectStorage
 {
 	private const string CurrentAppFolderName = "SIGEV";
-	private const string LegacyAppFolderName = "SADMAT";
-	private static bool legacyDataMigrationChecked;
 
-	private static string AppFolderPath
-	{
-		get
-		{
-			string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), CurrentAppFolderName);
-			EnsureLegacyDataMigrated(path);
-			return path;
-		}
-	}
+	private static string AppFolderPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), CurrentAppFolderName);
 
 	public static string ProjectsRootPath => Path.Combine(AppFolderPath, "Projects");
 
@@ -101,35 +91,5 @@ public static class ProjectStorage
 			return sanitized;
 		}
 		return "Projeto";
-	}
-
-	private static void EnsureLegacyDataMigrated(string targetPath)
-	{
-		if (legacyDataMigrationChecked)
-		{
-			return;
-		}
-		legacyDataMigrationChecked = true;
-		string legacyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), LegacyAppFolderName);
-		if (!Directory.Exists(legacyPath) || Directory.Exists(targetPath))
-		{
-			return;
-		}
-		CopyDirectory(legacyPath, targetPath);
-	}
-
-	private static void CopyDirectory(string sourcePath, string targetPath)
-	{
-		Directory.CreateDirectory(targetPath);
-		foreach (string directoryPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
-		{
-			Directory.CreateDirectory(directoryPath.Replace(sourcePath, targetPath, StringComparison.OrdinalIgnoreCase));
-		}
-		foreach (string filePath in Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories))
-		{
-			string targetFilePath = filePath.Replace(sourcePath, targetPath, StringComparison.OrdinalIgnoreCase);
-			Directory.CreateDirectory(Path.GetDirectoryName(targetFilePath)!);
-			File.Copy(filePath, targetFilePath, overwrite: true);
-		}
 	}
 }

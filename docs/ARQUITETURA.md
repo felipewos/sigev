@@ -18,7 +18,7 @@ O app é uma aplicação WinUI 3 desktop com navegação simples entre uma tela 
 
 ### Persistência
 
-- `PrimeiraTelaWinUI/Data/ProjectStorage.cs`: resolve e cria as pastas locais do app e migra dados legados de `SADMAT` para `SIGEV`.
+- `PrimeiraTelaWinUI/Data/ProjectStorage.cs`: resolve e cria as pastas locais do app.
 - `PrimeiraTelaWinUI/Data/ProjectRepository.cs`: persiste metadados de projetos em `projects.json`.
 - `PrimeiraTelaWinUI/Data/ProjectGroupsRepository.cs`: persiste os grupos participantes em `groups.json`.
 - `PrimeiraTelaWinUI/Data/ProjectCausesRepository.cs`: persiste causas em `causas.json` e importa/exporta a lista de causas em CSV.
